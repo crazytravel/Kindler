@@ -91,7 +91,7 @@ class Application:
 
         send_thread = threading.Thread(target=sender.send_attachment, kwargs={'queue': self.msg_queue})
         send_thread.start()
-        # send_thread.join()
+        send_thread.join()
         self.root.after(100, self.listen_for_result())
 
     def show_success_msg(self):
