@@ -21,6 +21,7 @@ class Application:
         self.center_window()
         self.raise_above_all()
         self.root.resizable(False, False)
+        self.debug_test()
         self.root.mainloop()
 
     def raise_above_all(self):
@@ -91,7 +92,7 @@ class Application:
 
         send_thread = threading.Thread(target=sender.send_attachment, kwargs={'queue': self.msg_queue})
         send_thread.start()
-        # send_thread.join()
+        send_thread.join()
         self.root.after(100, self.listen_for_result())
 
     def show_success_msg(self):
@@ -118,6 +119,11 @@ class Application:
                 self.show_success_msg()
             else:
                 self.show_error_msg()
+
+    def debug_test(self):
+        self.send_email.insert(0, 'wangshuo159@126.com')
+        self.user_password.insert(0, 'sw127198')
+        self.receive_email.insert(0, 'wangshuo866_3@kindle.cn')
 
 
 app = Application()
