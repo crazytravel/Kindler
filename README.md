@@ -1,6 +1,8 @@
 # Kindler
 A software for sending a EBook to Kindle device
 
+Download latest version [click here](https://github.com/crazytravel/Kindler/releases)
+
 ## Build for desktop
 `pip install pyinstaller`
 
