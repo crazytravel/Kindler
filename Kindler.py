@@ -4,7 +4,7 @@ from tkinter.filedialog import askopenfilenames
 import threading
 import queue
 from datetime import datetime
-from main import auto_sender as sender
+from main import auto_sender
 
 
 class Application:
@@ -21,6 +21,7 @@ class Application:
         self.center_window()
         self.raise_above_all()
         self.root.resizable(False, False)
+        self.debug_test()
         self.root.mainloop()
 
     def raise_above_all(self):
@@ -40,8 +41,8 @@ class Application:
         subject = 'Kindle Documents ' + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         tk.Label(self.root, text='邮件主题:').grid(row=row, column=0)
         self.email_subject = tk.Entry(self.root)
-        self.email_subject.insert(0, subject)
         self.email_subject.grid(row=row, column=1)
+        self.email_subject.insert(0, subject)
 
         row += 1
         tk.Label(self.root, text='发送邮箱:').grid(row=row, column=0)
@@ -75,21 +76,21 @@ class Application:
 
     def send_event(self):
         self.change_btn_state()
-
-        sender.subject = self.email_subject.get()
+        auto_sender.subject = self.email_subject.get()
         send_email = self.send_email.get()
         account_list = send_email.split('@')
         if len(account_list) == 0:
             tk.messagebox.showinfo('提示', '邮件账户错误')
             return
-        sender.main_host = 'smtp.' + account_list[1]
-        sender.main_user = account_list[0]
-        sender.main_password = self.user_password.get()
-        sender.sender = send_email
-        sender.receivers = self.receive_email.get()
-        sender.e_book_file_list = self.dir_entry.get().split(',')
+        stmp_sender = auto_sender.StmpSender(main_host='smtp.' + account_list[1],
+                                             main_user=account_list[0],
+                                             main_password=self.user_password.get(),
+                                             sender=send_email,
+                                             receivers=self.receive_email.get(),
+                                             subject=self.email_subject.get(),
+                                             e_boot_file_list=self.dir_entry.get().split(','))
 
-        send_thread = threading.Thread(target=sender.send_attachment, kwargs={'queue': self.msg_queue})
+        send_thread = threading.Thread(target=stmp_sender.send_attachment, kwargs={'queue': self.msg_queue})
         send_thread.start()
         send_thread.join()
         self.root.after(100, self.listen_for_result())
@@ -118,6 +119,11 @@ class Application:
                 self.show_success_msg()
             else:
                 self.show_error_msg()
+
+    def debug_test(self):
+        self.send_email.insert(0, 'wangshuo159@126.com')
+        self.user_password.insert(0, 'sw127198')
+        self.receive_email.insert(0, 'wangshuo866_3@kindle.cn')
 
 
 app = Application()
