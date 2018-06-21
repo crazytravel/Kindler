@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 # destination_file_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__))) + '/archives/attachments.zip'
 
 
-class StmpSender:
+class SmtpSender:
     def __init__(self, main_host, main_user, main_password, sender, receivers, subject, e_boot_file_list):
         self.main_host = main_host
         self.main_user = main_user
